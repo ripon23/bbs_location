@@ -2,7 +2,7 @@
 $host1="localhost";
 $user1="root";
 $pass1="";
-$db1="gramweb_db_server";
+$db1="peacedb";
 $conn1=database_connection($host1,$user1,$pass1,$db1);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
@@ -29,7 +29,7 @@ $conn1=database_connection($host1,$user1,$pass1,$db1);
     </style>
 
 <script src="js/jquery-1.6.min.js" type="text/javascript"></script>
-<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true"></script>
+<script type="text/javascript" src="http://maps.google.com/maps/api/js?sensor=true&key=AIzaSyCYeQ7CtMXKY4W1OA4G82TAkAJfYeb-Euk"></script>
 <script type="text/javascript" src="js/ui/jquery.ui.map.js"></script>
 <script>
 
@@ -243,13 +243,13 @@ jQuery(document).ready(function(){
     <td><select name="site_division" id="site_division" size="15" >
       <option value="">-- Division--</option>
       <?php            
-    $sql=mysql_query("SELECT DISTINCT
+    $sql=mysqli_query($conn1, "SELECT DISTINCT
 				location_bbs2011.division,
        location_bbs2011.*,       
        location_bbs2011.loc_type
-  FROM gramweb_db_server.location_bbs2011 location_bbs2011
+  FROM peacedb.location_bbs2011 location_bbs2011
  WHERE (location_bbs2011.loc_type = 'DV') ORDER BY location_bbs2011.loc_name_en ASC");
-    while($row=mysql_fetch_array($sql))
+    while($row=mysqli_fetch_array($sql))
     {
     $id=$row['division'];
     $data=$row['loc_name_en'];			 
@@ -289,26 +289,36 @@ jQuery(document).ready(function(){
 /**********************************************************************************/
 function database_connection($host,$user,$pass,$db)
 {
-	$connect= mysql_connect($host,$user,$pass);
-	if(!$connect)
-	{
-		echo "database not connected For the following error<br />".mysql_error();
-	}
-	else if($connect)
-	{
-		//echo "database connected";
+	
+	// Create connection
+	$conn = mysqli_connect($host, $user, $pass, $db);
+	// Check connection
+	if (!$conn) {
+		die("Connection failed: " . mysqli_connect_error());
 	}
 	
-	mysql_select_db($db,$connect);
-	if($db)
-	{
-		//echo "Database Selected";
-	}
+	return $conn;
 	
-	elseif(!$db)
-	{
-		echo "Database cannot be Selected for the following reasons <br />".mysql_error();
-	}
+	// $connect= mysqli_connect($host,$user,$pass);
+	// if(!$connect)
+	// {
+	// 	echo "database not connected For the following error<br />".mysql_error();
+	// }
+	// else if($connect)
+	// {
+	// 	//echo "database connected";
+	// }
+	
+	// mysqli_select_db($db,$connect);
+	// if($db)
+	// {
+	// 	//echo "Database Selected";
+	// }
+	
+	// elseif(!$db)
+	// {
+	// 	echo "Database cannot be Selected for the following reasons <br />".mysql_error();
+	// }
 } // END function database_connection
 ?>
     <div id="map_canvas">
